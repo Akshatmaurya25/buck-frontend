@@ -1,6 +1,7 @@
 "use client";
+import * as React from "react";
+import { useState, useEffect, useRef } from "react";
 
-import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -13,7 +14,7 @@ interface Message {
   content: string;
   timestamp: string;
 }
-import runagent from "../src/index";
+import runagent from "./game/src/index";
 import axios from "axios";
 import { copyToClipboard } from "./lib/utils";
 export const outerMessage: Message[] = [];
