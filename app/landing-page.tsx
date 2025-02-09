@@ -1,7 +1,34 @@
 "use client";
 
+import { Space_Grotesk, Outfit, Inter, Manrope } from "next/font/google";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-space-grotesk',
+});
+
+const outfit = Outfit({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-outfit',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-inter',
+});
+
+const manrope = Manrope({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-manrope',
+});
+
+// ...rest of your existing code...
 
 // Particle interface
 interface Particle {
@@ -114,7 +141,7 @@ export default function Component() {
   }
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-black">
+    <div className={`relative w-full h-screen overflow-hidden bg-black ${spaceGrotesk.variable} font-space-grotesk`}>
       <canvas
         ref={canvasRef}
         className="absolute top-0 left-0 w-full h-full"
