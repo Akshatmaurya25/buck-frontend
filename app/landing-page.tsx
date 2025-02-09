@@ -168,9 +168,9 @@ export default function Component() {
 
             {/* Desktop Menu */}
             <ul className="hidden md:flex space-x-8">
-              <li><a href="#" className="text-white hover:text-[#9E1F19] transition-colors">About</a></li>
+              <li><a href="https://x.com/buck_theduck" target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#9E1F19] transition-colors">About</a></li>
               <li><a href="#" className="text-white hover:text-[#9E1F19] transition-colors">Features</a></li>
-              <li><a href="#" className="text-white hover:text-[#9E1F19] transition-colors">Documentation</a></li>
+              <li><a href="https://github.com/Akshatmaurya25/buck-frontend/blob/main/README.md" target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#9E1F19] transition-colors">Documentation</a></li>
             </ul>
 
             {/* Mobile Menu Button */}
@@ -200,9 +200,9 @@ export default function Component() {
           {isMenuOpen && (
             <div className="md:hidden absolute top-20 left-0 right-0 bg-black/95 backdrop-blur-sm p-6">
               <ul className="flex flex-col space-y-6">
-                <li><a href="#" className="block text-white hover:text-[#9E1F19] transition-colors">About</a></li>
+                <li><a href="https://x.com/buck_theduck" target="_blank" rel="noopener noreferrer" className="block text-white hover:text-[#9E1F19] transition-colors">About</a></li>
                 <li><a href="#" className="block text-white hover:text-[#9E1F19] transition-colors">Features</a></li>
-                <li><a href="#" className="block text-white hover:text-[#9E1F19] transition-colors">Documentation</a></li>
+                <li><a href="https://github.com/Akshatmaurya25/buck-frontend/blob/main/README.md" target="_blank" rel="noopener noreferrer" className="block text-white hover:text-[#9E1F19] transition-colors">Documentation</a></li>
               </ul>
             </div>
           )}
