@@ -1,205 +1,200 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Grid } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
-import * as THREE from "three";
-import { Manrope } from "next/font/google";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
-const manrope = Manrope({ subsets: ["latin"] });
-
-// function SpinningLogo() {
-//   const groupRef = useRef<THREE.Group>(null);
-
-//   useFrame((state, delta) => {
-//     if (groupRef.current) {
-//       groupRef.current.rotation.y += delta * 0.5;
-//     }
-//   });
-
-//   return (
-//     <group ref={groupRef}>
-//       <mesh position={[0, 0, 0]}>
-//         <boxGeometry args={[1, 1, 1]} />
-//         <meshStandardMaterial color="#D9736A" />
-//       </mesh>
-//       <mesh position={[0.5, 0.5, 0.5]}>
-//         <boxGeometry args={[0.5, 0.5, 0.5]} />
-//         <meshStandardMaterial color="#F1E9E9" />
-//       </mesh>
-//       <mesh position={[-0.5, -0.5, -0.5]}>
-//         <boxGeometry args={[0.5, 0.5, 0.5]} />
-//         <meshStandardMaterial color="#D9736A" />
-//       </mesh>
-//     </group>
-//   );
-// }
-
-// function AnimatedBox({
-//   initialPosition,
-// }: {
-//   initialPosition: [number, number, number];
-// }) {
-//   const meshRef = useRef<THREE.Mesh>(null);
-//   const [targetPosition, setTargetPosition] = useState(
-//     new THREE.Vector3(...initialPosition)
-//   );
-//   const currentPosition = useRef(new THREE.Vector3(...initialPosition));
-
-//   const getAdjacentIntersection = (current: THREE.Vector3) => {
-//     const directions = [
-//       [1, 0],
-//       [-1, 0],
-//       [0, 1],
-//       [0, -1],
-//     ];
-//     const randomDirection =
-//       directions[Math.floor(Math.random() * directions.length)];
-//     return new THREE.Vector3(
-//       current.x + randomDirection[0] * 3,
-//       0.5,
-//       current.z + randomDirection[1] * 3
-//     );
-//   };
-
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       const newPosition = getAdjacentIntersection(currentPosition.current);
-//       newPosition.x = Math.max(-15, Math.min(15, newPosition.x));
-//       newPosition.z = Math.max(-15, Math.min(15, newPosition.z));
-//       setTargetPosition(newPosition);
-//     }, 1000);
-
-//     return () => clearInterval(interval);
-//   }, []);
-
-//   useFrame((state, delta) => {
-//     if (meshRef.current) {
-//       currentPosition.current.lerp(targetPosition, 0.1);
-//       meshRef.current.position.copy(currentPosition.current);
-//     }
-//   });
-
-//   return (
-//     <mesh ref={meshRef} position={initialPosition}>
-//       <boxGeometry args={[1, 1, 1]} />
-//       <meshStandardMaterial color="#F1E9E9" opacity={0.9} transparent />
-//       <lineSegments>
-//         <edgesGeometry
-//           attach="geometry"
-//           args={[new THREE.BoxGeometry(1, 1, 1)]}
-//         />
-//         <lineBasicMaterial attach="material" color="#D9736A" linewidth={2} />
-//       </lineSegments>
-//     </mesh>
-//   );
-// }
-
-// function Scene() {
-//   const initialPositions: [number, number, number][] = [
-//     [-9, 0.5, -9],
-//     [-3, 0.5, -3],
-//     [0, 0.5, 0],
-//     [3, 0.5, 3],
-//     [9, 0.5, 9],
-//     [-6, 0.5, 6],
-//     [6, 0.5, -6],
-//     [-12, 0.5, 0],
-//     [12, 0.5, 0],
-//     [0, 0.5, 12],
-//   ];
-
-//   return (
-//     <>
-//       <OrbitControls />
-//       <ambientLight intensity={0.5} />
-//       <pointLight position={[10, 10, 10]} />
-//       <Grid
-//         renderOrder={-1}
-//         position={[0, 0, 0]}
-//         infiniteGrid
-//         cellSize={1}
-//         cellThickness={0.5}
-//         sectionSize={3}
-//         sectionThickness={1}
-//         sectionColor="#808080"
-//         fadeDistance={50}
-//       />
-//       {initialPositions.map((position, index) => (
-//         <AnimatedBox key={index} initialPosition={position} />
-//       ))}
-//     </>
-//   );
-// }
+// Particle interface
+interface Particle {
+  x: number;
+  y: number;
+  radius: number;
+  color: string;
+  speedX: number;
+  speedY: number;
+  alpha: number;
+}
 
 export default function Component() {
   const router = useRouter();
-  const handleJoinWaitlist = () => {
-    router.push("/chatpage");
-  };
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d')!;
+    if (!ctx) return;
+
+    const resizeCanvas: () => void = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    // Initialize canvas size
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Particle system
+    const particles: Particle[] = [];
+    const particleCount = 100;
+    const colors = ['#9E1F19', '#FF3B30', '#FF6B6B'];
+
+    // Create particles
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 3 + 1,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        speedX: (Math.random() - 0.5) * 0.5,
+        speedY: (Math.random() - 0.5) * 0.5,
+        alpha: Math.random() * 0.5 + 0.2
+      });
+    }
+
+    // Animation function
+    function animate() {
+      if (!canvas) return;
+      // Clear canvas with semi-transparent black
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Update and draw particles
+      particles.forEach(particle => {
+        // Move particle
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+
+        // Wrap around screen
+        if (particle.x < 0) particle.x = canvas.width;
+        if (particle.x > canvas.width) particle.x = 0;
+        if (particle.y < 0) particle.y = canvas.height;
+        if (particle.y > canvas.height) particle.y = 0;
+
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${hexToRgb(particle.color)?.join(',')},${particle.alpha})`;
+        ctx.fill();
+
+        // Draw connections
+        particles.forEach(otherParticle => {
+          const dx = particle.x - otherParticle.x;
+          const dy = particle.y - otherParticle.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 100) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(158, 31, 25, ${0.2 * (1 - distance / 100)})`;
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(particle.x, particle.y);
+            ctx.lineTo(otherParticle.x, otherParticle.y);
+            ctx.stroke();
+          }
+        });
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    return () => window.removeEventListener('resize', resizeCanvas);
+  }, []);
+
+  // Helper function to convert hex to rgb
+  function hexToRgb(hex: string) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? [
+      parseInt(result[1], 16),
+      parseInt(result[2], 16),
+      parseInt(result[3], 16)
+    ] : null;
+  }
 
   return (
-    <div
-      className={`relative w-full h-screen bg-[#E6DADA] text-[#D9736A] overflow-hidden ${manrope.className}`}
-    >
-      <header className="absolute top-0 left-0 right-0 z-10 p-4">
-        <nav className="flex justify-between items-center max-w-6xl mx-auto">
-          <div className="flex items-center">
-            <div className="w-20 h-20">
-              {/* <Canvas camera={{ position: [0, 0, 5] }}>
-                <ambientLight intensity={0.5} />
-                <pointLight position={[10, 10, 10]} />
-                <SpinningLogo />
-              </Canvas> */}
+    <div className="relative w-full h-screen overflow-hidden bg-black">
+      <canvas
+        ref={canvasRef}
+        className="absolute top-0 left-0 w-full h-full"
+        style={{ opacity: 0.8 }}
+      />
+
+      {/* Overlay gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/50" />
+
+      <div className="relative z-10">
+        <header className="absolute top-0 left-0 right-0 p-6">
+          <nav className="flex justify-between items-center max-w-7xl mx-auto">
+            <div className="flex items-center">
+              <span className="text-2xl font-medium text-[#9E1F19]">BUCK</span>
             </div>
-            <span className="text-2xl font-bold">Buck</span>
+
+            {/* Desktop Menu */}
+            <ul className="hidden md:flex space-x-8">
+              <li><a href="#" className="text-white hover:text-[#9E1F19] transition-colors">About</a></li>
+              <li><a href="#" className="text-white hover:text-[#9E1F19] transition-colors">Features</a></li>
+              <li><a href="#" className="text-white hover:text-[#9E1F19] transition-colors">Documentation</a></li>
+            </ul>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden text-[#9E1F19]"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                {isMenuOpen ? (
+                  <path d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </nav>
+
+          {/* Mobile Menu */}
+          {isMenuOpen && (
+            <div className="md:hidden absolute top-20 left-0 right-0 bg-black/95 backdrop-blur-sm p-6">
+              <ul className="flex flex-col space-y-6">
+                <li><a href="#" className="block text-white hover:text-[#9E1F19] transition-colors">About</a></li>
+                <li><a href="#" className="block text-white hover:text-[#9E1F19] transition-colors">Features</a></li>
+                <li><a href="#" className="block text-white hover:text-[#9E1F19] transition-colors">Documentation</a></li>
+              </ul>
+            </div>
+          )}
+        </header>
+
+        {/* Hero Section */}
+        <div className="min-h-screen flex items-center justify-center px-4">
+          <div className="text-center max-w-4xl mx-auto">
+            <h1 className="text-3xl md:text-6xl lg:text-7xl font-medium mb-6 text-white">
+              Intelligent AI Agent for
+              <span className="text-[#9E1F19]"> SEI Chain</span>
+            </h1>
+            <p className="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
+              Execute blockchain transactions effortlessly with our AI-powered assistant
+            </p>
+            <button
+              onClick={() => router.push('/chatpage')}
+              className="group relative px-6 py-3 bg-[#9E1F19] rounded-lg overflow-hidden transition-all duration-300 ease-out hover:scale-105"
+            >
+              <span className="relative z-10 text-white text-lg font-medium group-hover:text-white">
+                Try Buck Now
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-[#9E1F19] to-[#FF3B30] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </button>
           </div>
-          <ul className="flex space-x-6">
-            <li>
-              <a href="#" className="hover:text-gray-500">
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-gray-500">
-                Features
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-gray-500">
-                Pricing
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-gray-500">
-                Contact
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </header>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-10">
-        <h1 className="text-6xl font-bold mb-8 max-w-4xl mx-auto">
-          A unified API for on-chain transactionskLink        </h1>
-        <h2 className="text-xl mb-10">
-          Route transactions from your dapp between L2 chains in real time
-        </h2>
-        <Link
-          className="bg-[#D9736A] text-[#F1E9E9] font-bold py-3 px-6 rounded-md hover:bg-[#F1E9E9] hover:text-[#D9736A] transition duration-300"
-          href={'/chatpage'}
-        >
-          Chat Now
-        </Link>
+        </div>
       </div>
-      {/* <Canvas
-        shadows
-        camera={{ position: [30, 30, 30], fov: 50 }}
-        className="absolute top-1/4 inset-0"
-      >
-        <Scene />
-      </Canvas> */}
     </div>
   );
 }
