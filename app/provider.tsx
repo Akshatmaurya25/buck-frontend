@@ -1,27 +1,15 @@
-"use client"
+"use client";
 
-import '@rainbow-me/rainbowkit/styles.css';
-import {
-  getDefaultConfig,
-  RainbowKitProvider,
-} from '@rainbow-me/rainbowkit';
-import { WagmiConfig, createClient } from 'wagmi';
-import {
-  mainnet,
-  polygon,
-  optimism,
-  arbitrum,
-  base,
-} from 'wagmi/chains';
-import {
-  QueryClientProvider,
-  QueryClient,
-} from "@tanstack/react-query";
+import "@rainbow-me/rainbowkit/styles.css";
+import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { WagmiConfig } from "wagmi";
+import { base, seiTestnet, sei } from "wagmi/chains";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 const config = getDefaultConfig({
-  appName: 'My RainbowKit App',
-  projectId: 'cc7548b1e3c2739cec64c6295b58cd50',
-  chains: [mainnet, polygon, optimism, arbitrum, base],
+  appName: "My RainbowKit App",
+  projectId: "cc7548b1e3c2739cec64c6295b58cd50",
+  chains: [sei, base, seiTestnet],
   ssr: true, // If your dApp uses server side rendering (SSR)
 });
 
@@ -29,11 +17,9 @@ const queryClient = new QueryClient();
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <WagmiConfig client={config}>
+    <WagmiConfig config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
-          {children}
-        </RainbowKitProvider>
+        <RainbowKitProvider>{children}</RainbowKitProvider>
       </QueryClientProvider>
     </WagmiConfig>
   );

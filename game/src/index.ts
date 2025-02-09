@@ -15,7 +15,7 @@ const state = {
 
 export { state };
 
-async function runagent(task:string) {
+async function runagent(task:string, address:string) {
     try {
         // Initialize the agent
         await buck.init();

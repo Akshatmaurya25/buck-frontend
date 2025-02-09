@@ -136,9 +136,7 @@ const manrope = Manrope({ subsets: ["latin"] });
 
 export default function Component() {
   const router = useRouter();
-  const handleJoinWaitlist = () => {
-    router.push("/chatpage");
-  };
+
 
   return (
     <div

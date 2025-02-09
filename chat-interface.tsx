@@ -17,6 +17,7 @@ interface Message {
 import runagent from "./game/src/index";
 import axios from "axios";
 import { copyToClipboard } from "./lib/utils";
+import { useAccount } from "wagmi";
 export const outerMessage: Message[] = [];
 export let sendMessageGlobal: ((message: string) => void) | null = null;
 
@@ -53,6 +54,7 @@ export default function ChatInterface() {
       const response = await axios.post("/api", task, {
         headers: {
           "Content-Type": "application/json",
+          address: account.address,
         },
       });
       if (response.data.success) {
@@ -77,6 +79,7 @@ export default function ChatInterface() {
     setInput("");
     setLoading(true);
   };
+  const account = useAccount();
   return (
     <div className="flex-1 flex flex-col bg-[#141414] overflow-auto text-[#F1E9E9]">
       <ScrollArea className="flex-1 flex flex-col max-h-full  p-4">

@@ -5,12 +5,14 @@ export async function POST(request: Request) {
   try {
     const body = await request.json()
     console.log("Received body:", body)
+    const headers = Object.fromEntries(request.headers.entries()); 
+  console.log("Request Headers:", headers.address);
 
     if (!body) {
       throw new Error("Request body is empty or undefined")
     }
 
-    const response = await runagent(body)
+    const response = await runagent(body, headers.address)
     console.log("Runagent response:", response)
 
     if (!response) {
