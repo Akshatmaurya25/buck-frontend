@@ -3,6 +3,14 @@
 import { Space_Grotesk, Outfit, Inter, Manrope } from "next/font/google";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+
+import {
+  ChartBarIcon,
+  CpuChipIcon,
+  ShieldCheckIcon,
+  ArrowRightIcon
+} from "@heroicons/react/24/outline";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -64,7 +72,7 @@ export default function Component() {
 
     // Particle system
     const particles: Particle[] = [];
-    const particleCount = 100;
+    const particleCount = 200;
     const colors = ['#9E1F19', '#FF3B30', '#FF6B6B'];
 
     // Create particles
@@ -72,7 +80,7 @@ export default function Component() {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 3 + 1,
+        radius: Math.random() * 1.3 + 1,
         color: colors[Math.floor(Math.random() * colors.length)],
         speedX: (Math.random() - 0.5) * 0.5,
         speedY: (Math.random() - 0.5) * 0.5,
@@ -113,7 +121,7 @@ export default function Component() {
 
           if (distance < 100) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(158, 31, 25, ${0.2 * (1 - distance / 100)})`;
+            ctx.strokeStyle = `rgba(158, 31, 25, ${0.1 * (1 - distance / 100)})`;
             ctx.lineWidth = 0.5;
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(otherParticle.x, otherParticle.y);
@@ -141,7 +149,7 @@ export default function Component() {
   }
 
   return (
-    <div className={`relative w-full h-screen overflow-hidden bg-black ${spaceGrotesk.variable} font-space-grotesk`}>
+    <div className={`relative w-full overflow-hidden bg-black ${spaceGrotesk.variable} font-space-grotesk`}>
       <canvas
         ref={canvasRef}
         className="absolute top-0 left-0 w-full h-full"
@@ -155,7 +163,7 @@ export default function Component() {
         <header className="absolute top-0 left-0 right-0 p-6">
           <nav className="flex justify-between items-center max-w-7xl mx-auto">
             <div className="flex items-center">
-              <span className="text-2xl font-medium text-[#9E1F19]">BUCK</span>
+              <span className="text-2xl font-medium text-[#9E1F19]">BUCK TERMINAL</span>
             </div>
 
             {/* Desktop Menu */}
@@ -221,6 +229,105 @@ export default function Component() {
             </button>
           </div>
         </div>
+
+        {/* Features Section */}
+        <section className="relative z-10 py-20 pb-44 px-4 bg-black/40 backdrop-blur-sm">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Powerful <span className="text-[#9E1F19]">Features</span>
+              </h2>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                Experience the next generation of blockchain interaction with our advanced AI capabilities
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                {
+                  icon: CpuChipIcon,
+                  title: "AI-Powered Analysis",
+                  description: "Advanced machine learning algorithms for intelligent transaction processing"
+                },
+                {
+                  icon: ShieldCheckIcon,
+                  title: "Secure Transactions",
+                  description: "Enterprise-grade security protocols ensuring safe blockchain operations"
+                },
+                {
+                  icon: ChartBarIcon,
+                  title: "Real-time Analytics",
+                  description: "Comprehensive insights and monitoring of your blockchain activities"
+                }
+              ].map((feature, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.2 }}
+                  className="p-6 rounded-xl bg-gradient-to-br from-black/60 to-[#9E1F19]/10 backdrop-blur-sm
+                             border border-white/10 hover:border-[#9E1F19]/50 transition-all duration-300"
+                >
+                  <feature.icon className="w-12 h-12 text-[#9E1F19] mb-4" />
+                  <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
+                  <p className="text-gray-400">{feature.description}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="relative z-10 bg-black/80 backdrop-blur-sm border-white/10">
+          <div className="max-w-7xl mx-auto">
+            <div className="items-center flex flex-row justify-between px-6 md:px-24 w-full h-[68px] gap-6">
+              <span className="text-gray-400">
+                © {new Date().getFullYear()} Buck. All rights reserved
+              </span>
+              <div className="flex flex-row justify-center items-center gap-6">
+                <a
+                  href="https://dexscreener.com/base/0x1bb9173f1493fb7951ab0eb6f159c67e53515369"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    alt="Buck Dex"
+                    loading="lazy"
+                    width="24"
+                    height="24"
+                    src="https://www.projectplutus.ai/_next/static/media/dexscreener.83a572db.svg"
+                  />
+                </a>
+                <a
+                  href="https://x.com/buck_theduck"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    alt="Buck Twitter"
+                    loading="lazy"
+                    width="24"
+                    height="24"
+                    src="https://www.projectplutus.ai/_next/static/media/twitter.74dede69.svg"
+                  />
+                </a>
+                <a
+                  href="https://app.gitbook.com/o/ElhT6uMw5tqdjRNqeXia/s/m2yVn8e3sHyLamXEvF1F/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    alt="Buck Docs"
+                    loading="lazy"
+                    width="24"
+                    height="24"
+                    src="https://www.projectplutus.ai/_next/static/media/gitbooks.68aab730.svg"
+                  />
+                </a>
+              </div>
+            </div>
+          </div>
+        </footer>
       </div>
     </div>
   );
