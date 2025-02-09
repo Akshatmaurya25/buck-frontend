@@ -208,6 +208,45 @@ export default function ChatInterface() {
             Send
           </Button>
         </div>
+        
+        {/* Template buttons section */}
+        <div className="mt-4 max-w-3xl mx-auto">
+          <div className="grid grid-cols-2 gap-4">
+            {/* First Row */}
+            <Button
+              className="h-20 bg-[#3C2322] text-[#F1E9E9] hover:bg-[#3C2322] flex flex-col items-center justify-center p-4"
+              onClick={() => handleSend("Get wallet balance")}
+            >
+              <span className="text-sm font-medium">Get your Wallet Balance</span>
+              <span className="text-xs text-[#9E9E9E] mt-2">Check your current wallet balance</span>
+            </Button>
+
+            <Button
+              className="h-20 bg-[#3C2322] text-[#F1E9E9] hover:bg-[#3C2322] flex flex-col items-center justify-center p-4"
+              onClick={() => handleSend("Transfer tokens")}
+            >
+              <span className="text-sm font-medium">Transfer your Tokens</span>
+              <span className="text-xs text-[#9E9E9E] mt-2">Send tokens securely</span>
+            </Button>
+
+            {/* Second Row */}
+            <Button
+              className="h-20 bg-[#3C2322] text-[#F1E9E9] hover:bg-[#3C2322] flex flex-col items-center justify-center p-4"
+              onClick={() => handleSend("Get tweets")}
+            >
+              <span className="text-sm font-medium">Get Tweets</span>
+              <span className="text-xs text-[#9E9E9E] mt-2">View latest crypto updates</span>
+            </Button>
+
+            <Button
+              className="h-20 bg-[#3C2322] text-[#F1E9E9] hover:bg-[#3C2322] flex flex-col items-center justify-center p-4"
+              onClick={() => handleSend("Tell me about cryptocurrency")}
+            >
+              <span className="text-sm font-medium">Know About Crypto</span>
+              <span className="text-xs text-[#9E9E9E] mt-2">Learn blockchain basics</span>
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

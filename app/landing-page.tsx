@@ -213,7 +213,7 @@ export default function Component() {
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-3xl md:text-6xl lg:text-7xl font-medium mb-6 text-white">
               Intelligent AI Agent for
-              <span className="text-[#9E1F19]"> SEI Chain</span>
+              <span className="text-[#9E1F19]"> SEI Network</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
               Execute blockchain transactions effortlessly with our AI-powered assistant
