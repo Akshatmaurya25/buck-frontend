@@ -163,7 +163,7 @@ export default function Component() {
         <header className="absolute top-0 left-0 right-0 p-6">
           <nav className="flex justify-between items-center max-w-7xl mx-auto">
             <div className="flex items-center">
-              <span className="text-2xl font-medium text-[#9E1F19]">BUCK</span>
+              <span className="text-2xl font-medium text-[#eeeaea]">BUCK TERMINAL</span>
             </div>
 
             {/* Desktop Menu */}

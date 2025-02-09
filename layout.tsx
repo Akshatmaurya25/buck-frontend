@@ -11,6 +11,8 @@ import {
   Eye,
   BarChart2,
   X,
+  Github,
+  Twitter,
 } from "lucide-react";
 import logo from "./logo.png";
 import Image from "next/image";
@@ -29,7 +31,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="rounded-full h-fit overflow-hidden">
               <Image src={logo} width={40} className="" alt="" />
             </div>
-            <span className="font-semibold">Buck</span>
+            <span className="font-semibold">Buck Terminal</span>
           </div>
         </div>
         <ScrollArea className="h-[calc(100vh-64px)]">
@@ -75,16 +77,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Button
                 variant="ghost"
                 className="w-full justify-start text-[#F1E9E9] hover:bg-[#3C2322]"
+                onClick={() =>
+                  window.open(
+                    "https://github.com/Akshatmaurya25/buck-agent",
+                    "_blank"
+                  )
+                }
               >
-                <Eye className="mr-2 h-4 w-4" />
-                Live preview
+                <Github className="mr-2 h-4 w-4" />
+                GitHub
               </Button>
               <Button
                 variant="ghost"
                 className="w-full justify-start text-[#F1E9E9] hover:bg-[#3C2322]"
+                onClick={() =>
+                  window.open("https://x.com/buck_theduck", "_blank")
+                }
               >
-                <BarChart2 className="mr-2 h-4 w-4" />
-                Performance
+                <X className="mr-2 h-4 w-4" />
+                Tweets
               </Button>
             </div>
           </div>
@@ -96,11 +107,52 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="flex-1 flex flex-col">
           {/* Header */}
           <header className="h-14 border-b border-[#3C2322] px-4 flex items-center justify-between">
-            <h1 className="text-sm font-medium">Conversation</h1>
+            <h1 className="text-sm font-medium">Start Your Conversation</h1>
             <div className="flex items-center gap-2">
-              <Button>
-                <ConnectButton accountStatus="avatar" />
-              </Button>
+              <div className="relative">
+                <ConnectButton.Custom>
+                  {({ account, chain, openConnectModal, mounted }) => {
+                    return (
+                      <div
+                        {...(!mounted && {
+                          'aria-hidden': true,
+                          'style': {
+                            opacity: 0,
+                            pointerEvents: 'none',
+                            userSelect: 'none',
+                          },
+                        })}
+                      >
+                        {(() => {
+                          if (!mounted || !account || !chain) {
+                            return (
+                              <button
+                                onClick={openConnectModal}
+                                className="group relative px-6 py-2 bg-[#9E1F19] rounded-lg overflow-hidden transition-all duration-300 ease-out hover:scale-105"
+                              >
+                                <span className="relative z-10 text-white font-medium">Connect Wallet</span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-[#9E1F19] to-[#FF3B30] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                              </button>
+                            )
+                          }
+                          return (
+                            <div className="relative bg-[#9E1F19] rounded-lg overflow-hidden group transition-all duration-300 ease-out hover:scale-105">
+                              <div className="absolute inset-0 bg-gradient-to-r from-[#9E1F19] to-[#FF3B30] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                              <div className="relative z-10 px-4 py-2">
+                                <ConnectButton 
+                                  accountStatus="avatar"
+                                  chainStatus="none"
+                                  showBalance={false}
+                                />
+                              </div>
+                            </div>
+                          )
+                        })()}
+                      </div>
+                    )
+                  }}
+                </ConnectButton.Custom>
+              </div>
             </div>
           </header>
           {account.isConnected ? (
