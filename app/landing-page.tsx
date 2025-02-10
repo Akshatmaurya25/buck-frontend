@@ -1,7 +1,7 @@
 "use client";
 
 import { Space_Grotesk, Outfit, Inter, Manrope } from "next/font/google";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
@@ -18,7 +18,7 @@ const spaceGrotesk = Space_Grotesk({
   variable: '--font-space-grotesk',
 });
 
-const outfit = Outfit({
+const outfit = Outfit({ 
   subsets: ['latin'],
   weight: ['400', '500', '600'],
   variable: '--font-outfit',
@@ -35,8 +35,6 @@ const manrope = Manrope({
   weight: ['400', '500', '600'],
   variable: '--font-manrope',
 });
-
-// ...rest of your existing code...
 
 // Particle interface
 interface Particle {
@@ -56,6 +54,17 @@ export default function Component() {
 
   // Add this with other state declarations at the top of your component
   const featuresRef = useRef<HTMLElement>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  }, []);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -274,36 +283,59 @@ export default function Component() {
 
               <div className="grid md:grid-cols-3 gap-8">
                 {[
-                {
-                  icon: CpuChipIcon,
-                  title: "ERC20 Token Creation",
-                  description: "Deploy custom tokens on SEI blockchain with automated smart contract generation"
-                },
-                {
-                  icon: ShieldCheckIcon,
-                  title: "Cookie Data Swarm Analytics",
-                  description: "Real-time mindshare metrics, trend detection, and network effect analysis"
-                },
-                {
-                  icon: ChartBarIcon,
-                  title: "GAME Framework Integration",
-                  description: "Secure and efficient framework for decentralized network interactions by Virtual Protocol"
-                }
-                ].map((feature, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.2 }}
-                  className="p-6 rounded-xl bg-gradient-to-br from-black/60 to-[#9E1F19]/10 backdrop-blur-sm
-                             border border-white/10 hover:border-[#9E1F19]/50 transition-all duration-300"
-                >
-                  <feature.icon className="w-12 h-12 text-[#9E1F19] mb-4" />
-                  <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
-                  <p className="text-gray-400">{feature.description}</p>
-                </motion.div>
-              ))}
-            </div>
+  {
+    icon: CpuChipIcon,
+    title: "ERC20 Token Creation",
+    description: "Deploy custom tokens on SEI blockchain with automated smart contract generation"
+  },
+  {
+    icon: ShieldCheckIcon,
+    title: "Cookie Data Swarm Analytics",
+    description: "Real-time mindshare metrics, trend detection, and network effect analysis"
+  },
+  {
+    icon: ChartBarIcon,
+    title: "GAME Framework Integration",
+    description: "Secure and efficient framework for decentralized network interactions by Virtual Protocol"
+  }
+].map((feature, index) => (
+  <motion.div
+    key={index}
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ delay: index * 0.2 }}
+    className="p-6 rounded-xl bg-black backdrop-blur-sm
+               border border-white/10 hover:border-[#9E1F19]/50 transition-all duration-300
+               relative group overflow-hidden"
+    onMouseMove={handleMouseMove}
+    onMouseEnter={() => setIsHovering(true)}
+    onMouseLeave={() => setIsHovering(false)}
+  >
+    {/* Cursor glow effect */}
+    <div
+      className={`absolute pointer-events-none transition-opacity duration-300 rounded-full ${
+        isHovering ? 'opacity-100' : 'opacity-0'
+      }`}
+      style={{
+        background: 'radial-gradient(circle at center, rgba(158, 31, 25, 0.3) 0%, rgba(158, 31, 25, 0.1) 40%, transparent 70%)',
+        transform: `translate(${mousePosition.x - 125}px, ${mousePosition.y - 125}px)`,
+        width: '250px',
+        height: '250px',
+        left: 0,
+        top: 0,
+        zIndex: 5,
+      }}
+    />
+    
+    {/* Content */}
+    <div className="relative z-10">
+      <feature.icon className="w-12 h-12 text-[#9E1F19] mb-4" />
+      <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
+      <p className="text-gray-400">{feature.description}</p>
+    </div>
+  </motion.div>
+))}
+              </div>
           </div>
         </section>
 

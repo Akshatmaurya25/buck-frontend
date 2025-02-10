@@ -17,7 +17,7 @@ export const copyToClipboard = async (text:string) => {
     const textArea = document.createElement('textarea');
     textArea.value = text;
     
-    // Make the textarea hidden but keep it in the page
+    
     textArea.style.position = 'fixed';
     textArea.style.left = '-999999px';
     textArea.style.top = '-999999px';
