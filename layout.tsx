@@ -32,6 +32,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Image src={logo} width={40} className="" alt="" />
             </div>
             <span className="font-semibold">Buck Terminal</span>
+            <span className="px-1.5 py-0.25 text-xs bg-[#ffffff] text-black rounded-full">BETA</span>
           </div>
         </div>
         <ScrollArea className="h-[calc(100vh-64px)]">
@@ -39,35 +40,35 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <nav className="space-y-2">
               <Button
                 variant="ghost"
-                className="w-full justify-start text-[#F1E9E9] hover:bg-[#3C2322]"
+                className="w-full justify-start text-[#F1E9E9] hover:bg-[#3C2322] hover:text-[#dfcaca]"
               >
                 <LayoutGrid className="mr-2 h-4 w-4" />
                 Tasks
               </Button>
               <Button
                 variant="ghost"
-                className="w-full justify-start text-[#F1E9E9] hover:bg-[#3C2322]"
+                className="w-full justify-start text-[#F1E9E9] hover:bg-[#3C2322] hover:text-[#dfcaca]"
               >
                 <Functions className="mr-2 h-4 w-4" />
                 Functions
               </Button>
               <Button
                 variant="ghost"
-                className="w-full justify-start text-[#F1E9E9] hover:bg-[#3C2322]"
+                className="w-full justify-start text-[#F1E9E9] hover:bg-[#3C2322] hover:text-[#dfcaca]"
               >
                 <Layers className="mr-2 h-4 w-4" />
                 Integrations
               </Button>
               <Button
                 variant="ghost"
-                className="w-full justify-start text-[#F1E9E9] hover:bg-[#3C2322]"
+                className="w-full justify-start text-[#F1E9E9] hover:bg-[#3C2322] hover:text-[#dfcaca]"
               >
                 <Users className="mr-2 h-4 w-4" />
                 Users
               </Button>
               <Button
                 variant="ghost"
-                className="w-full justify-start text-[#F1E9E9] hover:bg-[#3C2322]"
+                className="w-full justify-start text-[#F1E9E9] hover:bg-[#3C2322] hover:text-[#dfcaca]"
               >
                 <Settings className="mr-2 h-4 w-4" />
                 Settings
@@ -76,7 +77,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="pt-4 border-t border-[#3C2322]">
               <Button
                 variant="ghost"
-                className="w-full justify-start text-[#F1E9E9] hover:bg-[#3C2322]"
+                className="w-full justify-start text-[#F1E9E9] hover:bg-[#3C2322] hover:text-[#dfcaca]"
                 onClick={() =>
                   window.open(
                     "https://github.com/Akshatmaurya25/buck-agent",
@@ -89,7 +90,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </Button>
               <Button
                 variant="ghost"
-                className="w-full justify-start text-[#F1E9E9] hover:bg-[#3C2322]"
+                className="w-full justify-start text-[#F1E9E9] hover:bg-[#3C2322] hover:text-[#dfcaca]"
                 onClick={() =>
                   window.open("https://x.com/buck_theduck", "_blank")
                 }
@@ -106,7 +107,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex">
         <div className="flex-1 flex flex-col">
           {/* Header */}
-          <header className="h-14 border-b border-[#3C2322] px-4 flex items-center justify-between">
+          <header className="h-16 border-b border-[#3C2322] px-4 flex items-center justify-between">
             <h1 className="text-sm font-medium">Start Your Conversation</h1>
             <div className="flex items-center gap-2">
               <div className="relative">
