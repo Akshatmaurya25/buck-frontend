@@ -54,8 +54,8 @@ export default function Component() {
 
   // Add this with other state declarations at the top of your component
   const featuresRef = useRef<HTMLElement>(null);
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -308,13 +308,13 @@ export default function Component() {
                border border-white/10 hover:border-[#9E1F19]/50 transition-all duration-300
                relative group overflow-hidden"
     onMouseMove={handleMouseMove}
-    onMouseEnter={() => setIsHovering(true)}
-    onMouseLeave={() => setIsHovering(false)}
+    onMouseEnter={() => setHoveredCard(index)}
+    onMouseLeave={() => setHoveredCard(null)}
   >
     {/* Cursor glow effect */}
     <div
       className={`absolute pointer-events-none transition-opacity duration-300 rounded-full ${
-        isHovering ? 'opacity-100' : 'opacity-0'
+        hoveredCard === index ? 'opacity-100' : 'opacity-0'
       }`}
       style={{
         background: 'radial-gradient(circle at center, rgba(158, 31, 25, 0.3) 0%, rgba(158, 31, 25, 0.1) 40%, transparent 70%)',
