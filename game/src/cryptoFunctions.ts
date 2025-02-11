@@ -1,4 +1,4 @@
-import {  state } from './index';
+import {  addressState, state } from './index';
 import { ExecutableGameFunctionResponse, ExecutableGameFunctionStatus, GameFunction } from "@virtuals-protocol/game";
 import { walletFunctions } from "./goat/getBalance";
 import { transfertokenFunction } from "./goat/transfertoken";
@@ -232,6 +232,7 @@ export const getSeiWalletBalance = new GameFunction({
     args:[] as const,
     executable: async (_, logger) => { 
         try {
+          
             console.log?.("wait a second, fetching the balance of the SEI wallet");
             const result = await walletAdapterSEI.getBalance();
             console.log("SEI wallet:", result); // Debug log

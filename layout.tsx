@@ -19,9 +19,10 @@ import Image from "next/image";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import { Children } from "react";
+export let walletAddress : `0x${string}` | undefined
 export default function Layout({ children }: { children: React.ReactNode }) {
   const account = useAccount();
-
+ walletAddress=  account.address;
   return (
     <div className="flex h-screen bg-[#141414] max-h-screen overflow-y-hidden text-[#F1E9E9]">
       {/* Sidebar */}
@@ -115,11 +116,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     return (
                       <div
                         {...(!mounted && {
-                          'aria-hidden': true,
-                          'style': {
+                          "aria-hidden": true,
+                          style: {
                             opacity: 0,
-                            pointerEvents: 'none',
-                            userSelect: 'none',
+                            pointerEvents: "none",
+                            userSelect: "none",
                           },
                         })}
                       >
@@ -130,26 +131,28 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                 onClick={openConnectModal}
                                 className="group relative px-6 py-2 bg-[#9E1F19] rounded-lg overflow-hidden transition-all duration-300 ease-out hover:scale-105"
                               >
-                                <span className="relative z-10 text-white font-medium">Connect Wallet</span>
+                                <span className="relative z-10 text-white font-medium">
+                                  Connect Wallet
+                                </span>
                                 <div className="absolute inset-0 bg-gradient-to-r from-[#9E1F19] to-[#FF3B30] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                               </button>
-                            )
+                            );
                           }
                           return (
                             <div className="relative bg-[#9E1F19] rounded-lg overflow-hidden group transition-all duration-300 ease-out hover:scale-105">
                               <div className="absolute inset-0 bg-gradient-to-r from-[#9E1F19] to-[#FF3B30] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                               <div className="relative z-10 px-4 py-2">
-                                <ConnectButton 
+                                <ConnectButton
                                   accountStatus="avatar"
                                   chainStatus="none"
                                   showBalance={false}
                                 />
                               </div>
                             </div>
-                          )
+                          );
                         })()}
                       </div>
-                    )
+                    );
                   }}
                 </ConnectButton.Custom>
               </div>

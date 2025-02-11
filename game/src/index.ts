@@ -12,16 +12,33 @@ const state = {
         this._responseString = value;
     }
 };
+const addressState = {
+    _address: '0x', // Default to an empty 0x-prefixed string
+    get address(): string {
+        return this._address;
+    },
+    set address(value: string) {
+        if (!/^0x[a-fA-F0-9]{40}$/.test(value)) {
+            throw new Error("Invalid address format. Must be a 0x-prefixed 40-character hexadecimal string.");
+        }
+        this._address = value;
+    }
+};
 
-export { state };
+export { state , addressState };
 
-async function runagent(task:string, address:string) {
+async function runagent(task:string, address1:string) {
     try {
-        // Initialize the agent
+
         await buck.init();
 
-        // Create readline interface for user input
-   
+        try {
+            addressState._address = address1;
+            console.log("THis is our address",addressState.address)
+        } catch (error) {
+            console.error("Invalid address provided:", error);
+            return; // Exit early if the address is invalid
+        }
         
         console.log("Agent initialized. Enter your task (type 'exit' to quit):");
         const worker = buck.getWorkerById("crypto_worker");

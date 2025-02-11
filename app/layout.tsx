@@ -3,6 +3,8 @@ import "./globals.css";
 import Providers from "./provider";
 import { Space_Grotesk } from "next/font/google";
 
+
+
 export const metadata: Metadata = {
   title: "Buck",
   description: "Created with v0",
@@ -10,9 +12,9 @@ export const metadata: Metadata = {
 };
 
 const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-space-grotesk',
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-space-grotesk",
 });
 
 export default function RootLayout({
