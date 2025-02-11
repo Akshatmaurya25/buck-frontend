@@ -10,12 +10,20 @@ const config: Config = {
   ],
   theme: {
   	extend: {
-		fontFamily: {
-			'space-grotesk': ['var(--font-space-grotesk)'],
-			'outfit': ['var(--font-outfit)'],
-			'inter': ['var(--font-inter)'],
-			'manrope': ['var(--font-manrope)'],
-		  },
+  		fontFamily: {
+  			'space-grotesk': [
+  				'var(--font-space-grotesk)'
+  			],
+  			outfit: [
+  				'var(--font-outfit)'
+  			],
+  			inter: [
+  				'var(--font-inter)'
+  			],
+  			manrope: [
+  				'var(--font-manrope)'
+  			]
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

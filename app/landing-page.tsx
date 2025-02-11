@@ -1,7 +1,7 @@
 "use client";
 
 import { Space_Grotesk, Outfit, Inter, Manrope } from "next/font/google";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
@@ -18,7 +18,7 @@ const spaceGrotesk = Space_Grotesk({
   variable: '--font-space-grotesk',
 });
 
-const outfit = Outfit({
+const outfit = Outfit({ 
   subsets: ['latin'],
   weight: ['400', '500', '600'],
   variable: '--font-outfit',
@@ -35,8 +35,6 @@ const manrope = Manrope({
   weight: ['400', '500', '600'],
   variable: '--font-manrope',
 });
-
-// ...rest of your existing code...
 
 // Particle interface
 interface Particle {
@@ -60,6 +58,19 @@ export default function Component() {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Add this with other state declarations at the top of your component
+  const featuresRef = useRef<HTMLElement>(null);
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -170,13 +181,41 @@ export default function Component() {
         <header className="absolute top-0 left-0 right-0 p-6">
           <nav className="flex justify-between items-center max-w-7xl mx-auto">
             <div className="flex items-center">
-              <span className="text-2xl font-medium text-[#eeeaea]">BUCK TERMINAL</span>
+              <span className="text-2xl font-medium">
+                {['B', 'U', 'C', 'K', ' ', 'T', 'E', 'R', 'M', 'I', 'N', 'A', 'L'].map((letter, index) => (
+                  <motion.span
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                      color: ['#eeeaea', '#FF6B6B', '#9E1F19']
+                    }}
+                    transition={{
+                      opacity: { duration: 0.2, delay: index * 0.1 },
+                      y: { duration: 0.2, delay: index * 0.1 },
+                      color: {
+                        duration: 2,
+                        delay: index * 0.1,
+                        repeat: Infinity,
+                        repeatDelay: 4
+                      }
+                    }}
+                    className="inline-block"
+                  >
+                    {letter}
+                  </motion.span>
+                ))}
+              </span>
             </div>
 
             {/* Desktop Menu */}
             <ul className="hidden md:flex space-x-8">
               <li><a href="https://x.com/buck_theduck" target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#9E1F19] transition-colors">About</a></li>
-              <li><a href="#" className="text-white hover:text-[#9E1F19] transition-colors">Features</a></li>
+              <li><a href="#" onClick={() => featuresRef.current?.scrollIntoView({ behavior: 'smooth' })}
+      className="text-white hover:text-[#9E1F19] transition-colors"
+    >
+      Features</a></li>
               <li><a href="https://github.com/Akshatmaurya25/buck-frontend/blob/main/README.md" target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#9E1F19] transition-colors">Documentation</a></li>
             </ul>
 
@@ -238,49 +277,72 @@ export default function Component() {
         </div>
 
         {/* Features Section */}
-        <section className="relative z-10 py-20 pb-44 px-4 bg-black/40 backdrop-blur-sm">
+        <section ref={featuresRef} className="relative z-10 pb-44 px-4 bg-black/40 backdrop-blur-sm">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
                 Powerful <span className="text-[#9E1F19]">Features</span>
               </h2>
-              <p className="text-gray-400 max-w-2xl mx-auto">
-                Experience the next generation of blockchain interaction with our advanced AI capabilities
-              </p>
-            </div>
+                <p className="text-gray-400 max-w-2xl mx-auto">
+                Revolutionizing blockchain token creation with advanced data analytics and AI-powered insights on the SEI network
+                </p>
+              </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                {
-                  icon: CpuChipIcon,
-                  title: "AI-Powered Analysis",
-                  description: "Advanced machine learning algorithms for intelligent transaction processing"
-                },
-                {
-                  icon: ShieldCheckIcon,
-                  title: "Secure Transactions",
-                  description: "Enterprise-grade security protocols ensuring safe blockchain operations"
-                },
-                {
-                  icon: ChartBarIcon,
-                  title: "Real-time Analytics",
-                  description: "Comprehensive insights and monitoring of your blockchain activities"
-                }
-              ].map((feature, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.2 }}
-                  className="p-6 rounded-xl bg-gradient-to-br from-black/60 to-[#9E1F19]/10 backdrop-blur-sm
-                             border border-white/10 hover:border-[#9E1F19]/50 transition-all duration-300"
-                >
-                  <feature.icon className="w-12 h-12 text-[#9E1F19] mb-4" />
-                  <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
-                  <p className="text-gray-400">{feature.description}</p>
-                </motion.div>
-              ))}
-            </div>
+              <div className="grid md:grid-cols-3 gap-8">
+                {[
+  {
+    icon: CpuChipIcon,
+    title: "ERC20 Token Creation",
+    description: "Deploy custom tokens on SEI blockchain with automated smart contract generation"
+  },
+  {
+    icon: ShieldCheckIcon,
+    title: "Cookie Data Swarm Analytics",
+    description: "Real-time mindshare metrics, trend detection, and network effect analysis"
+  },
+  {
+    icon: ChartBarIcon,
+    title: "GAME Framework Integration",
+    description: "Secure and efficient framework for decentralized network interactions by Virtual Protocol"
+  }
+].map((feature, index) => (
+  <motion.div
+    key={index}
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ delay: index * 0.2 }}
+    className="p-6 rounded-xl bg-black backdrop-blur-sm
+               border border-white/10 hover:border-[#9E1F19]/50 transition-all duration-300
+               relative group overflow-hidden"
+    onMouseMove={handleMouseMove}
+    onMouseEnter={() => setHoveredCard(index)}
+    onMouseLeave={() => setHoveredCard(null)}
+  >
+    {/* Cursor glow effect */}
+    <div
+      className={`absolute pointer-events-none transition-opacity duration-300 rounded-full ${
+        hoveredCard === index ? 'opacity-100' : 'opacity-0'
+      }`}
+      style={{
+        background: 'radial-gradient(circle at center, rgba(158, 31, 25, 0.3) 0%, rgba(158, 31, 25, 0.1) 40%, transparent 70%)',
+        transform: `translate(${mousePosition.x - 125}px, ${mousePosition.y - 125}px)`,
+        width: '250px',
+        height: '250px',
+        left: 0,
+        top: 0,
+        zIndex: 5,
+      }}
+    />
+    
+    {/* Content */}
+    <div className="relative z-10">
+      <feature.icon className="w-12 h-12 text-[#9E1F19] mb-4" />
+      <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
+      <p className="text-gray-400">{feature.description}</p>
+    </div>
+  </motion.div>
+))}
+              </div>
           </div>
         </section>
 
@@ -292,6 +354,8 @@ export default function Component() {
                 © {new Date().getFullYear()} Buck. All rights reserved
               </span>
               <div className="flex flex-row justify-center items-center gap-6">
+
+                {/* Dexscreener */}
                 <a
                   href="https://dexscreener.com/base/0x1bb9173f1493fb7951ab0eb6f159c67e53515369"
                   target="_blank"
@@ -305,6 +369,8 @@ export default function Component() {
                     src="https://www.projectplutus.ai/_next/static/media/dexscreener.83a572db.svg"
                   />
                 </a>
+
+                {/* Twitter handle  */}
                 <a
                   href="https://x.com/buck_theduck"
                   target="_blank"
@@ -318,18 +384,21 @@ export default function Component() {
                     src="https://www.projectplutus.ai/_next/static/media/twitter.74dede69.svg"
                   />
                 </a>
+
+                {/* Github */}
                 <a
-                  href="https://app.gitbook.com/o/ElhT6uMw5tqdjRNqeXia/s/m2yVn8e3sHyLamXEvF1F/"
+                  href="https://github.com/Akshatmaurya25/buck-frontend"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <img
-                    alt="Buck Docs"
-                    loading="lazy"
+                  <svg
                     width="24"
                     height="24"
-                    src="https://www.projectplutus.ai/_next/static/media/gitbooks.68aab730.svg"
-                  />
+                    viewBox="0 0 512 512"
+                    fill="#AEAFB0"
+                  >
+                    <path d="M256,32C132.3,32,32,134.9,32,261.7c0,101.5,64.2,187.5,153.2,217.9a17.56,17.56,0,0,0,3.8.4c8.3,0,11.5-6.1,11.5-11.4,0-5.5-.2-19.9-.3-39.1a102.4,102.4,0,0,1-22.6,2.7c-43.1,0-52.9-33.5-52.9-33.5-10.2-26.5-24.9-33.6-24.9-33.6-19.5-13.7-.1-14.1,1.4-14.1h.1c22.5,2,34.3,23.8,34.3,23.8,11.2,19.6,26.2,25.1,39.6,25.1a63,63,0,0,0,25.6-6c2-14.8,7.8-24.9,14.2-30.7-49.7-5.8-102-25.5-102-113.5,0-25.1,8.7-45.6,23-61.6-2.3-5.8-10-29.2,2.2-60.8a18.64,18.64,0,0,1,5-.5c8.1,0,26.4,3.1,56.6,24.1a208.21,208.21,0,0,1,112.2,0c30.2-21,48.5-24.1,56.6-24.1a18.64,18.64,0,0,1,5,.5c12.2,31.6,4.5,55,2.2,60.8,14.3,16.1,23,36.6,23,61.6,0,88.2-52.4,107.6-102.3,113.3,8,7.1,15.2,21.1,15.2,42.5,0,30.7-.3,55.5-.3,63,0,5.4,3.1,11.5,11.4,11.5a19.35,19.35,0,0,0,4-.4C415.9,449.2,480,363.1,480,261.7,480,134.9,379.7,32,256,32Z"></path>
+                  </svg>
                 </a>
               </div>
             </div>
