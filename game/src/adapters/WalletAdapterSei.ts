@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 import CurrencyConverter from '../utils/rateconversion';
 import { bigIntToDecimal } from "../utils/BigIntDecimalConversions";
 import { addressState } from ".."; // Ensure this import is correct and addressState is initialized properly
-import { walletSEIClient } from "@/app/page";
+
 import { initWalletClient } from "@/functions/transferfunction";
 
 dotenv.config();
@@ -30,15 +30,15 @@ export class WalletAdapter {
         }
 
         this.account = privateKeyToAccount(privateKey as `0x${string}`);
-        // this.publicClient = createPublicClient({
-        //     chain: seiTestnet,
-        //     transport: http(rpcUrl)
-        // });
-        this.publicClient = walletSEIClient
+        this.publicClient = createPublicClient({
+            chain: seiTestnet,
+            transport: http(rpcUrl)
+        });
+
         
   
         this.walletClient = createWalletClient({
-            account: addressState._address as `0x${string}`,
+            account: this.account ,
             chain: seiTestnet,
             transport: http(rpcUrl)
         });
@@ -46,7 +46,7 @@ export class WalletAdapter {
 
     async getBalance() {
         try {
-            const address = addressState._address;
+            const address = this.account.address;
             const balance = await this.publicClient.getBalance({
                 address: address as `0x${string}`,
             });
@@ -64,11 +64,9 @@ export class WalletAdapter {
 
     async transferTokenSEI(to: `0x${string}`, amount: bigint) {
         try {
-            const address = addressState._address ;
-    
-            const walletClient1 = await initWalletClient();
+ 
             const hash = await  this.walletClient.sendTransaction({
-                account: address as `0x${string}`,
+                account: this.account,
                 to,
                 value: amount,
             });

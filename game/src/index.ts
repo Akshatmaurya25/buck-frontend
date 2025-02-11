@@ -1,4 +1,5 @@
 
+import { testWalletAdapter } from "./adapters/testWalletAdapter";
 import { buck } from "./agent";
 
 
@@ -27,7 +28,11 @@ const addressState = {
 
 export { state , addressState };
 
-async function runagent(task:string, address1:string) {
+async function runagent(task:string, address1:`0x${string}`) {
+
+     testWalletAdapter(address1);
+
+
     try {
 
         await buck.init();
@@ -43,7 +48,8 @@ async function runagent(task:string, address1:string) {
         console.log("Agent initialized. Enter your task (type 'exit' to quit):");
         const worker = buck.getWorkerById("crypto_worker");
         try {
-                      await worker.runTask(task, { verbose: true });
+                     const res =  await worker.runTask(task, { verbose: true });
+                     console.log("Agent response", res)
                        return state.responseString;
                     
                     } catch (error) {

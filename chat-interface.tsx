@@ -58,8 +58,7 @@ export default function ChatInterface() {
       const response = await axios.post("/api", task, {
         headers: {
           "Content-Type": "application/json",
-          // address: await getAccount(),
-          address: await getAccount(),
+          address: account.address,
         },
       });
       if (response.data.success) {

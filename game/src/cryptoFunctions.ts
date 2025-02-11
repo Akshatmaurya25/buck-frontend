@@ -237,11 +237,14 @@ export const getSeiWalletBalance = new GameFunction({
             const result = await walletAdapterSEI.getBalance();
             console.log("SEI wallet:", result); // Debug log
             logger?.("sei balance set")
-            state.responseString = `Balance for your SEI wallet with address ${result.address} : ${result.balance} SEI `;
+            // state.responseString = `Balance for your SEI wallet with address ${result.address} : ${result.balance} SEI `;
             return new ExecutableGameFunctionResponse(
                 ExecutableGameFunctionStatus.Done,
                 `Balance: ${result}`,
-            
+                {
+                    execute: false, 
+                    functionName: "Hello" 
+                }
             );
           
         } catch (error) {
