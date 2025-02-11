@@ -90,9 +90,18 @@ export const transferSEI = new GameFunction({
     
     
         const formattedAddress = args.walletAddress as `0x${string}`;
-            const result = await walletAdapterSEI.transferTokenSEI(formattedAddress, decimalToBigInt(args.amount));
-              state.responseString = `Transfered to ${result.address}. Checkout transaction hash ${result.hash}, you can check it on https://seitrace.com/tx/${result.hash}?chain=atlantic-2 `
-            console.log("Function result:", result); // Debug log
+            // const result = await walletAdapterSEI.transferTokenSEI(formattedAddress, decimalToBigInt(args.amount));
+            //   state.responseString = `Transfered to ${result.address}. Checkout transaction hash ${result.hash}, you can check it on https://seitrace.com/tx/${result.hash}?chain=atlantic-2 `
+            const res = {
+                execute:true,
+                functionName: "transfertokenSEI",
+                args:{
+                    to:formattedAddress,
+                    value:parsedAmount
+                }
+            }
+              state.responseString=JSON.stringify(res)
+            // console.log("Function result:", result); // Debug log
             return new ExecutableGameFunctionResponse(
                 ExecutableGameFunctionStatus.Done,
                 "Transfer completed successfully"

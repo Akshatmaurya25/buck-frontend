@@ -34,13 +34,13 @@ const buck = new GameAgent(process.env.API_KEY || "", {
 
 
 
+await buck.init();
 async function run_buck(task:string) {
 
 
 
     try {
 
-        await buck.init();
 
        
         

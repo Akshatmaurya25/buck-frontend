@@ -11,7 +11,7 @@ import Image from "next/image";
 import logo from "./logo.png";
 interface Message {
   role: "agent" | "user";
-  content: string;
+  content: string | React.ReactElement;
   timestamp: string;
 }
 import runagent from "./game/src/index";
@@ -19,11 +19,13 @@ import axios from "axios";
 import { copyToClipboard } from "./lib/utils";
 import { useAccount } from "wagmi";
 import { getAccount } from "./app/landing-page";
+import { executeResponse } from "./functions/executeResponse";
 
 export const outerMessage: Message[] = [];
 export let sendMessageGlobal: ((message: string) => void) | null = null;
-
+const acc = await getAccount();
 export default function ChatInterface() {
+  console.log(acc);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -37,13 +39,17 @@ export default function ChatInterface() {
   const [hasInteracted, setHasInteracted] = useState(false);
   const [showTemplates, setShowTemplates] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-
+  // executeResponse({
+  //   execute: true,
+  //   functionName: "transfertokenSEI",
+  //   args: { to: "0xE81032A865Dd45BF39E8430f72b9FA8f2e2Cb030", value: 0.2 },
+  // });
   // Function to scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-  const sendMessage = (message: string, role?: string) => {
-    if (!message.trim()) return;
+  const sendMessage = (message: string | React.ReactElement, role?: string) => {
+    if (typeof message == "string" && !message.trim()) return;
     const newMessage: Message = {
       role: role === "agent" ? "agent" : "user",
       content: message,
@@ -61,8 +67,18 @@ export default function ChatInterface() {
           address: account.address,
         },
       });
+      const res = JSON.parse(response.data.data);
       if (response.data.success) {
-        sendMessage(response.data.data, "agent");
+        if (res) {
+          sendMessage("Confirm transaction from your wallet", "agent");
+        } else {
+          sendMessage(response.data.data, "agent");
+        }
+
+        if (res.execute) {
+          const string = await executeResponse(res);
+          sendMessage(string, "agent");
+        }
         setLoading(false);
       }
       console.log("Response:", response);

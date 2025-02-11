@@ -1,6 +1,6 @@
 
 import { getAccount } from "@/app/landing-page";
-import { decimalToBigInt } from "@/game/src/utils/BigIntDecimalConversions";
+import { decimalToBigInt, toBigInt } from "@/game/src/utils/BigIntDecimalConversions";
 import { createWalletClient, custom, http } from "viem";
 import { seiTestnet } from "viem/chains";
 
@@ -22,7 +22,7 @@ import { seiTestnet } from "viem/chains";
     }); 
   };
   
-  export const transferSEIToken = async (to: `0x${string}`, value:bigint) => {
+  export const transferSEIToken = async (to: `0x${string}`, value:number) => {
     try {
       //  if(window.ethereum){
       //   console.error("Eth provider not found")
@@ -36,8 +36,8 @@ import { seiTestnet } from "viem/chains";
         const hash = await  client.sendTransaction({
             account: account as `0x${string}`,
      
-            to: "0xE0cA75B7A935033D52dE30ac525486692578a74a",
-            value: 100000000000n,
+            to: to,
+            value: decimalToBigInt(String(value)),
         });
         console.log("hash", hash)
       return hash;
@@ -46,3 +46,5 @@ import { seiTestnet } from "viem/chains";
       throw error;
     }
   };
+
+

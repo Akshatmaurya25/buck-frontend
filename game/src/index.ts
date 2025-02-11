@@ -28,14 +28,13 @@ const addressState = {
 
 export { state , addressState };
 
+await buck.init();
 async function runagent(task:string, address1:`0x${string}`) {
 
-     testWalletAdapter(address1);
 
 
     try {
 
-        await buck.init();
 
         try {
             addressState._address = address1;
