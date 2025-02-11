@@ -9,31 +9,31 @@ import {
   ChartBarIcon,
   CpuChipIcon,
   ShieldCheckIcon,
-  ArrowRightIcon
+  ArrowRightIcon,
 } from "@heroicons/react/24/outline";
 
 const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-space-grotesk',
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-space-grotesk",
 });
 
-const outfit = Outfit({ 
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-outfit',
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-outfit",
 });
 
 const inter = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-inter',
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-inter",
 });
 
 const manrope = Manrope({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-manrope',
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-manrope",
 });
 
 // Particle interface
@@ -46,6 +46,13 @@ interface Particle {
   speedY: number;
   alpha: number;
 }
+export const getAccount = async () => {
+  const [account] = await window.ethereum!.request({
+    method: "eth_requestAccounts",
+  });
+
+  return account;
+};
 
 export default function Component() {
   const router = useRouter();
@@ -69,7 +76,7 @@ export default function Component() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d')!;
+    const ctx = canvas.getContext("2d")!;
     if (!ctx) return;
 
     const resizeCanvas: () => void = () => {
@@ -79,12 +86,12 @@ export default function Component() {
 
     // Initialize canvas size
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener("resize", resizeCanvas);
 
     // Particle system
     const particles: Particle[] = [];
     const particleCount = 200;
-    const colors = ['#9E1F19', '#FF3B30', '#FF6B6B'];
+    const colors = ["#9E1F19", "#FF3B30", "#FF6B6B"];
 
     // Create particles
     for (let i = 0; i < particleCount; i++) {
@@ -95,7 +102,7 @@ export default function Component() {
         color: colors[Math.floor(Math.random() * colors.length)],
         speedX: (Math.random() - 0.5) * 0.5,
         speedY: (Math.random() - 0.5) * 0.5,
-        alpha: Math.random() * 0.5 + 0.2
+        alpha: Math.random() * 0.5 + 0.2,
       });
     }
 
@@ -103,11 +110,11 @@ export default function Component() {
     function animate() {
       if (!canvas) return;
       // Clear canvas with semi-transparent black
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Update and draw particles
-      particles.forEach(particle => {
+      particles.forEach((particle) => {
         // Move particle
         particle.x += particle.speedX;
         particle.y += particle.speedY;
@@ -121,18 +128,22 @@ export default function Component() {
         // Draw particle
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${hexToRgb(particle.color)?.join(',')},${particle.alpha})`;
+        ctx.fillStyle = `rgba(${hexToRgb(particle.color)?.join(",")},${
+          particle.alpha
+        })`;
         ctx.fill();
 
         // Draw connections
-        particles.forEach(otherParticle => {
+        particles.forEach((otherParticle) => {
           const dx = particle.x - otherParticle.x;
           const dy = particle.y - otherParticle.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
           if (distance < 100) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(158, 31, 25, ${0.1 * (1 - distance / 100)})`;
+            ctx.strokeStyle = `rgba(158, 31, 25, ${
+              0.1 * (1 - distance / 100)
+            })`;
             ctx.lineWidth = 0.5;
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(otherParticle.x, otherParticle.y);
@@ -146,21 +157,25 @@ export default function Component() {
 
     animate();
 
-    return () => window.removeEventListener('resize', resizeCanvas);
+    return () => window.removeEventListener("resize", resizeCanvas);
   }, []);
 
   // Helper function to convert hex to rgb
   function hexToRgb(hex: string) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? [
-      parseInt(result[1], 16),
-      parseInt(result[2], 16),
-      parseInt(result[3], 16)
-    ] : null;
+    return result
+      ? [
+          parseInt(result[1], 16),
+          parseInt(result[2], 16),
+          parseInt(result[3], 16),
+        ]
+      : null;
   }
 
   return (
-    <div className={`relative w-full overflow-hidden bg-black ${spaceGrotesk.variable} font-space-grotesk`}>
+    <div
+      className={`relative w-full overflow-hidden bg-black ${spaceGrotesk.variable} font-space-grotesk`}
+    >
       <canvas
         ref={canvasRef}
         className="absolute top-0 left-0 w-full h-full"
@@ -175,14 +190,28 @@ export default function Component() {
           <nav className="flex justify-between items-center max-w-7xl mx-auto">
             <div className="flex items-center">
               <span className="text-2xl font-medium">
-                {['B', 'U', 'C', 'K', ' ', 'T', 'E', 'R', 'M', 'I', 'N', 'A', 'L'].map((letter, index) => (
+                {[
+                  "B",
+                  "U",
+                  "C",
+                  "K",
+                  " ",
+                  "T",
+                  "E",
+                  "R",
+                  "M",
+                  "I",
+                  "N",
+                  "A",
+                  "L",
+                ].map((letter, index) => (
                   <motion.span
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{
                       opacity: 1,
                       y: 0,
-                      color: ['#eeeaea', '#FF6B6B', '#9E1F19']
+                      color: ["#eeeaea", "#FF6B6B", "#9E1F19"],
                     }}
                     transition={{
                       opacity: { duration: 0.2, delay: index * 0.1 },
@@ -191,8 +220,8 @@ export default function Component() {
                         duration: 2,
                         delay: index * 0.1,
                         repeat: Infinity,
-                        repeatDelay: 4
-                      }
+                        repeatDelay: 4,
+                      },
                     }}
                     className="inline-block"
                   >
@@ -204,12 +233,37 @@ export default function Component() {
 
             {/* Desktop Menu */}
             <ul className="hidden md:flex space-x-8">
-              <li><a href="https://x.com/buck_theduck" target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#9E1F19] transition-colors">About</a></li>
-              <li><a href="#" onClick={() => featuresRef.current?.scrollIntoView({ behavior: 'smooth' })}
-      className="text-white hover:text-[#9E1F19] transition-colors"
-    >
-      Features</a></li>
-              <li><a href="https://github.com/Akshatmaurya25/buck-frontend/blob/main/README.md" target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#9E1F19] transition-colors">Documentation</a></li>
+              <li>
+                <a
+                  href="https://x.com/buck_theduck"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-[#9E1F19] transition-colors"
+                >
+                  About
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  onClick={() =>
+                    featuresRef.current?.scrollIntoView({ behavior: "smooth" })
+                  }
+                  className="text-white hover:text-[#9E1F19] transition-colors"
+                >
+                  Features
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/Akshatmaurya25/buck-frontend/blob/main/README.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-[#9E1F19] transition-colors"
+                >
+                  Documentation
+                </a>
+              </li>
             </ul>
 
             {/* Mobile Menu Button */}
@@ -239,9 +293,34 @@ export default function Component() {
           {isMenuOpen && (
             <div className="md:hidden absolute top-20 left-0 right-0 bg-black/95 backdrop-blur-sm p-6">
               <ul className="flex flex-col space-y-6">
-                <li><a href="https://x.com/buck_theduck" target="_blank" rel="noopener noreferrer" className="block text-white hover:text-[#9E1F19] transition-colors">About</a></li>
-                <li><a href="#" className="block text-white hover:text-[#9E1F19] transition-colors">Features</a></li>
-                <li><a href="https://github.com/Akshatmaurya25/buck-frontend/blob/main/README.md" target="_blank" rel="noopener noreferrer" className="block text-white hover:text-[#9E1F19] transition-colors">Documentation</a></li>
+                <li>
+                  <a
+                    href="https://x.com/buck_theduck"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-white hover:text-[#9E1F19] transition-colors"
+                  >
+                    About
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="block text-white hover:text-[#9E1F19] transition-colors"
+                  >
+                    Features
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://github.com/Akshatmaurya25/buck-frontend/blob/main/README.md"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-white hover:text-[#9E1F19] transition-colors"
+                  >
+                    Documentation
+                  </a>
+                </li>
               </ul>
             </div>
           )}
@@ -255,10 +334,11 @@ export default function Component() {
               <span className="text-[#9E1F19]"> SEI Network</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
-              Execute blockchain transactions effortlessly with our AI-powered assistant
+              Execute blockchain transactions effortlessly with our AI-powered
+              assistant
             </p>
             <button
-              onClick={() => router.push('/chatpage')}
+              onClick={() => router.push("/chatpage")}
               className="group relative px-6 py-3 bg-[#9E1F19] rounded-lg overflow-hidden transition-all duration-300 ease-out hover:scale-105"
             >
               <span className="relative z-10 text-white text-lg font-medium group-hover:text-white">
@@ -270,72 +350,84 @@ export default function Component() {
         </div>
 
         {/* Features Section */}
-        <section ref={featuresRef} className="relative z-10 pb-44 px-4 bg-black/40 backdrop-blur-sm">
+        <section
+          ref={featuresRef}
+          className="relative z-10 pb-44 px-4 bg-black/40 backdrop-blur-sm"
+        >
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
                 Powerful <span className="text-[#9E1F19]">Features</span>
               </h2>
-                <p className="text-gray-400 max-w-2xl mx-auto">
-                Revolutionizing blockchain token creation with advanced data analytics and AI-powered insights on the SEI network
-                </p>
-              </div>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                Revolutionizing blockchain token creation with advanced data
+                analytics and AI-powered insights on the SEI network
+              </p>
+            </div>
 
-              <div className="grid md:grid-cols-3 gap-8">
-                {[
-  {
-    icon: CpuChipIcon,
-    title: "ERC20 Token Creation",
-    description: "Deploy custom tokens on SEI blockchain with automated smart contract generation"
-  },
-  {
-    icon: ShieldCheckIcon,
-    title: "Cookie Data Swarm Analytics",
-    description: "Real-time mindshare metrics, trend detection, and network effect analysis"
-  },
-  {
-    icon: ChartBarIcon,
-    title: "GAME Framework Integration",
-    description: "Secure and efficient framework for decentralized network interactions by Virtual Protocol"
-  }
-].map((feature, index) => (
-  <motion.div
-    key={index}
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ delay: index * 0.2 }}
-    className="p-6 rounded-xl bg-black backdrop-blur-sm
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                {
+                  icon: CpuChipIcon,
+                  title: "ERC20 Token Creation",
+                  description:
+                    "Deploy custom tokens on SEI blockchain with automated smart contract generation",
+                },
+                {
+                  icon: ShieldCheckIcon,
+                  title: "Cookie Data Swarm Analytics",
+                  description:
+                    "Real-time mindshare metrics, trend detection, and network effect analysis",
+                },
+                {
+                  icon: ChartBarIcon,
+                  title: "GAME Framework Integration",
+                  description:
+                    "Secure and efficient framework for decentralized network interactions by Virtual Protocol",
+                },
+              ].map((feature, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.2 }}
+                  className="p-6 rounded-xl bg-black backdrop-blur-sm
                border border-white/10 hover:border-[#9E1F19]/50 transition-all duration-300
                relative group overflow-hidden"
-    onMouseMove={handleMouseMove}
-    onMouseEnter={() => setHoveredCard(index)}
-    onMouseLeave={() => setHoveredCard(null)}
-  >
-    {/* Cursor glow effect */}
-    <div
-      className={`absolute pointer-events-none transition-opacity duration-300 rounded-full ${
-        hoveredCard === index ? 'opacity-100' : 'opacity-0'
-      }`}
-      style={{
-        background: 'radial-gradient(circle at center, rgba(158, 31, 25, 0.3) 0%, rgba(158, 31, 25, 0.1) 40%, transparent 70%)',
-        transform: `translate(${mousePosition.x - 125}px, ${mousePosition.y - 125}px)`,
-        width: '250px',
-        height: '250px',
-        left: 0,
-        top: 0,
-        zIndex: 5,
-      }}
-    />
-    
-    {/* Content */}
-    <div className="relative z-10">
-      <feature.icon className="w-12 h-12 text-[#9E1F19] mb-4" />
-      <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
-      <p className="text-gray-400">{feature.description}</p>
-    </div>
-  </motion.div>
-))}
-              </div>
+                  onMouseMove={handleMouseMove}
+                  onMouseEnter={() => setHoveredCard(index)}
+                  onMouseLeave={() => setHoveredCard(null)}
+                >
+                  {/* Cursor glow effect */}
+                  <div
+                    className={`absolute pointer-events-none transition-opacity duration-300 rounded-full ${
+                      hoveredCard === index ? "opacity-100" : "opacity-0"
+                    }`}
+                    style={{
+                      background:
+                        "radial-gradient(circle at center, rgba(158, 31, 25, 0.3) 0%, rgba(158, 31, 25, 0.1) 40%, transparent 70%)",
+                      transform: `translate(${mousePosition.x - 125}px, ${
+                        mousePosition.y - 125
+                      }px)`,
+                      width: "250px",
+                      height: "250px",
+                      left: 0,
+                      top: 0,
+                      zIndex: 5,
+                    }}
+                  />
+
+                  {/* Content */}
+                  <div className="relative z-10">
+                    <feature.icon className="w-12 h-12 text-[#9E1F19] mb-4" />
+                    <h3 className="text-xl font-semibold text-white mb-2">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-400">{feature.description}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -347,7 +439,6 @@ export default function Component() {
                 © {new Date().getFullYear()} Buck. All rights reserved
               </span>
               <div className="flex flex-row justify-center items-center gap-6">
-
                 {/* Dexscreener */}
                 <a
                   href="https://dexscreener.com/base/0x1bb9173f1493fb7951ab0eb6f159c67e53515369"

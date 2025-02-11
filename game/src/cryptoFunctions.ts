@@ -1,4 +1,4 @@
-import {  state } from './index';
+import {  addressState, state } from './index';
 import { ExecutableGameFunctionResponse, ExecutableGameFunctionStatus, GameFunction } from "@virtuals-protocol/game";
 import { walletFunctions } from "./goat/getBalance";
 import { transfertokenFunction } from "./goat/transfertoken";
@@ -90,9 +90,18 @@ export const transferSEI = new GameFunction({
     
     
         const formattedAddress = args.walletAddress as `0x${string}`;
-            const result = await walletAdapterSEI.transferTokenSEI(formattedAddress, decimalToBigInt(args.amount));
-              state.responseString = `Transfered to ${result.address}. Checkout transaction hash ${result.hash}, you can check it on https://seitrace.com/tx/${result.hash}?chain=atlantic-2 `
-            console.log("Function result:", result); // Debug log
+            // const result = await walletAdapterSEI.transferTokenSEI(formattedAddress, decimalToBigInt(args.amount));
+            //   state.responseString = `Transfered to ${result.address}. Checkout transaction hash ${result.hash}, you can check it on https://seitrace.com/tx/${result.hash}?chain=atlantic-2 `
+            const res = {
+                execute:true,
+                functionName: "transfertokenSEI",
+                args:{
+                    to:formattedAddress,
+                    value:parsedAmount
+                }
+            }
+              state.responseString=JSON.stringify(res)
+            // console.log("Function result:", result); // Debug log
             return new ExecutableGameFunctionResponse(
                 ExecutableGameFunctionStatus.Done,
                 "Transfer completed successfully"
@@ -232,15 +241,19 @@ export const getSeiWalletBalance = new GameFunction({
     args:[] as const,
     executable: async (_, logger) => { 
         try {
+          
             console.log?.("wait a second, fetching the balance of the SEI wallet");
             const result = await walletAdapterSEI.getBalance();
             console.log("SEI wallet:", result); // Debug log
             logger?.("sei balance set")
-            state.responseString = `Balance for your SEI wallet with address ${result.address} : ${result.balance} SEI `;
+            // state.responseString = `Balance for your SEI wallet with address ${result.address} : ${result.balance} SEI `;
             return new ExecutableGameFunctionResponse(
                 ExecutableGameFunctionStatus.Done,
                 `Balance: ${result}`,
-            
+                {
+                    execute: false, 
+                    functionName: "Hello" 
+                }
             );
           
         } catch (error) {

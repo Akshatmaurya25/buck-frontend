@@ -5,6 +5,7 @@ import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { WagmiConfig } from "wagmi";
 import { base, seiTestnet, sei } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { Address, createWalletClient, custom } from "viem";
 
 const config = getDefaultConfig({
   appName: "My RainbowKit App",
@@ -12,6 +13,16 @@ const config = getDefaultConfig({
   chains: [sei, base, seiTestnet],
   ssr: true, // If your dApp uses server side rendering (SSR)
 });
+
+export const getAccount = async (): Promise<Address> => {
+  const [account] = await window.ethereum.request({
+    method: "eth_requestAccounts",
+  });
+
+  return account as Address; // Type assertion to Address
+};
+
+
 
 const queryClient = new QueryClient();
 

@@ -19,3 +19,15 @@ export function decimalToBigInt(decimalStr:string, decimals = 18) {
 }
 
 
+export function toBigInt(value: number | string): bigint {
+    if (typeof value === "number") {
+        if (!Number.isSafeInteger(value)) {
+            throw new Error("Number exceeds safe integer range. Use a string instead.");
+        }
+        return BigInt(value);
+    } else if (typeof value === "string") {
+        return BigInt(value);
+    } else {
+        throw new TypeError("Invalid input type. Expected number or string.");
+    }
+}

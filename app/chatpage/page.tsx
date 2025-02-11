@@ -4,9 +4,14 @@ import { useState } from "react";
 import Layout from "../../layout";
 import ChatInterface from "../../chat-interface";
 import Modal from "../../Model";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import {
+  ConnectButton,
+  useAccountModal,
+  useChainModal,
+  useConnectModal,
+} from "@rainbow-me/rainbowkit";
 
-export default function Page() {
+export default async function Page() {
   const [isWalletConnected, setIsWalletConnected] = useState(true);
 
   const handleConnectWallet = () => {

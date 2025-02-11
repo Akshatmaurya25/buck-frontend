@@ -7,7 +7,6 @@ export async function POST(request: Request) {
     console.log("Received body:", body)
     const headers = Object.fromEntries(request.headers.entries()); 
   console.log("Request Headers:", headers.address);
-
     if (!body) {
       throw new Error("Request body is empty or undefined")
     }

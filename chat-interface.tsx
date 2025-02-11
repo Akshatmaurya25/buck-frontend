@@ -11,17 +11,21 @@ import Image from "next/image";
 import logo from "./logo.png";
 interface Message {
   role: "agent" | "user";
-  content: string;
+  content: string | React.ReactElement;
   timestamp: string;
 }
 import runagent from "./game/src/index";
 import axios from "axios";
 import { copyToClipboard } from "./lib/utils";
 import { useAccount } from "wagmi";
+import { getAccount } from "./app/landing-page";
+import { executeResponse } from "./functions/executeResponse";
+
 export const outerMessage: Message[] = [];
 export let sendMessageGlobal: ((message: string) => void) | null = null;
-
+const acc = await getAccount();
 export default function ChatInterface() {
+  console.log(acc);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -35,13 +39,17 @@ export default function ChatInterface() {
   const [hasInteracted, setHasInteracted] = useState(false);
   const [showTemplates, setShowTemplates] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-
+  // executeResponse({
+  //   execute: true,
+  //   functionName: "transfertokenSEI",
+  //   args: { to: "0xE81032A865Dd45BF39E8430f72b9FA8f2e2Cb030", value: 0.2 },
+  // });
   // Function to scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-  const sendMessage = (message: string, role?: string) => {
-    if (!message.trim()) return;
+  const sendMessage = (message: string | React.ReactElement, role?: string) => {
+    if (typeof message == "string" && !message.trim()) return;
     const newMessage: Message = {
       role: role === "agent" ? "agent" : "user",
       content: message,
@@ -59,8 +67,18 @@ export default function ChatInterface() {
           address: account.address,
         },
       });
+      const res = JSON.parse(response.data.data);
       if (response.data.success) {
-        sendMessage(response.data.data, "agent");
+        if (res) {
+          sendMessage("Confirm transaction from your wallet", "agent");
+        } else {
+          sendMessage(response.data.data, "agent");
+        }
+
+        if (res.execute) {
+          const string = await executeResponse(res);
+          sendMessage(string, "agent");
+        }
         setLoading(false);
       }
       console.log("Response:", response);
@@ -92,23 +110,23 @@ export default function ChatInterface() {
         {
           title: "Get your Wallet Balance",
           desc: "Check your current wallet balance",
-          query: "Get wallet balance"
+          query: "Get wallet balance",
         },
         {
           title: "Transfer your Tokens",
           desc: "Send tokens securely",
-          query: "Transfer tokens"
+          query: "Transfer tokens",
         },
         {
           title: "Get Tweets",
           desc: "View latest crypto updates",
-          query: "Get tweets"
+          query: "Get tweets",
         },
         {
           title: "Know About Crypto",
           desc: "Learn blockchain basics",
-          query: "Tell me about cryptocurrency"
-        }
+          query: "Tell me about cryptocurrency",
+        },
       ].map((item, i) => (
         <Button
           key={i}
@@ -116,7 +134,9 @@ export default function ChatInterface() {
           onClick={() => handleSend(item.query)}
         >
           <span className="text-sm font-medium text-center">{item.title}</span>
-          <span className="text-xs text-[#9E9E9E] mt-2 text-center">{item.desc}</span>
+          <span className="text-xs text-[#9E9E9E] mt-2 text-center">
+            {item.desc}
+          </span>
         </Button>
       ))}
     </div>
@@ -125,15 +145,19 @@ export default function ChatInterface() {
   return (
     <div className="flex-1 flex flex-col bg-[#141414] overflow-auto text-[#F1E9E9]">
       {/* Center container for messages and input */}
-      <div className={cn(
-        "flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 transition-all duration-300",
-        showTemplates ? "justify-center mt-[-2rem]" : "justify-end"
-      )}>
+      <div
+        className={cn(
+          "flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 transition-all duration-300",
+          showTemplates ? "justify-center mt-[-2rem]" : "justify-end"
+        )}
+      >
         {/* Messages container */}
-        <ScrollArea className={cn(
-          "w-full flex-1 transition-all duration-300",
-          showTemplates ? "mb-4 max-h-[50vh]" : "max-h-[80vh]"
-        )}>
+        <ScrollArea
+          className={cn(
+            "w-full flex-1 transition-all duration-300",
+            showTemplates ? "mb-4 max-h-[50vh]" : "max-h-[80vh]"
+          )}
+        >
           <div className="space-y-4">
             {messages.map((message, index) => (
               <div
@@ -270,23 +294,23 @@ export default function ChatInterface() {
                   {
                     title: "Wallet Balance",
                     desc: "Check balance",
-                    query: "Get wallet balance"
+                    query: "Get wallet balance",
                   },
                   {
                     title: "Transfer Tokens",
                     desc: "Send tokens",
-                    query: "Transfer tokens"
+                    query: "Transfer tokens",
                   },
                   {
                     title: "Get Tweets",
                     desc: "Crypto updates",
-                    query: "Get tweets"
+                    query: "Get tweets",
                   },
                   {
                     title: "About Crypto",
                     desc: "Learn basics",
-                    query: "Tell me about cryptocurrency"
-                  }
+                    query: "Tell me about cryptocurrency",
+                  },
                 ].map((item, i) => (
                   <Button
                     key={i}
