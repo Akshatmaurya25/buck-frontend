@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "./provider";
 import { Space_Grotesk } from "next/font/google";
+import { ChatProvider } from '../contexts/ChatContext';
 
 export const metadata: Metadata = {
   title: "Buck",
@@ -23,8 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${spaceGrotesk.variable} font-space-grotesk`}>
-        {/* {children} */}
-        <Providers>{children}</Providers>
+        <ChatProvider>
+          <Providers>{children}</Providers>
+        </ChatProvider>
       </body>
     </html>
   );
