@@ -23,9 +23,8 @@ import { executeResponse } from "./functions/executeResponse";
 
 export const outerMessage: Message[] = [];
 export let sendMessageGlobal: ((message: string) => void) | null = null;
-const acc = await getAccount();
+
 export default function ChatInterface() {
-  console.log(acc);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -69,10 +68,10 @@ export default function ChatInterface() {
       });
       const res = JSON.parse(response.data.data);
       if (response.data.success) {
-        if (res) {
+        if (res.execute) {
           sendMessage("Confirm transaction from your wallet", "agent");
         } else {
-          sendMessage(response.data.data, "agent");
+          sendMessage(res.message, "agent");
         }
 
         if (res.execute) {
