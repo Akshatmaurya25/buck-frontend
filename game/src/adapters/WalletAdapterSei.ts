@@ -46,7 +46,7 @@ export class WalletAdapter {
 
     async getBalance() {
         try {
-            const address = this.account.address;
+            const address = addressState._address;
             const balance = await this.publicClient.getBalance({
                 address: address as `0x${string}`,
             });
@@ -54,7 +54,7 @@ export class WalletAdapter {
             return {
                 success: true,
                 balance: bigIntToDecimal(balance),
-                address: this.account.address
+                address: address
             };
         } catch (error) {
             console.error("Error fetching balance:", error);
