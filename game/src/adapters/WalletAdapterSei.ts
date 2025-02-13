@@ -54,7 +54,7 @@ export class WalletAdapter {
             return {
                 success: true,
                 balance: bigIntToDecimal(balance),
-                address: this.account.address
+                address:    this.account.address
             };
         } catch (error) {
             console.error("Error fetching balance:", error);
