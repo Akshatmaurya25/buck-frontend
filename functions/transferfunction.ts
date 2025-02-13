@@ -1,7 +1,7 @@
-'use client'
+
 import { getAccount } from "@/app/landing-page";
-import { decimalToBigInt } from "@/game/src/utils/BigIntDecimalConversions";
-import { createWalletClient, custom } from "viem";
+import { decimalToBigInt, toBigInt } from "@/game/src/utils/BigIntDecimalConversions";
+import { createWalletClient, custom, http } from "viem";
 import { seiTestnet } from "viem/chains";
 
 
@@ -22,27 +22,29 @@ import { seiTestnet } from "viem/chains";
     }); 
   };
   
-  export const transferSEIToken = async (to: `0x${string}`, value:bigint) => {
+  export const transferSEIToken = async (to: `0x${string}`, value:number) => {
     try {
       //  if(window.ethereum){
       //   console.error("Eth provider not found")
       //   console.log(window.ethereum)
       //  }
-  
+  console.log("this is us",window.ethereum)
       const client = await initWalletClient();
+      const rpcUrl = process.env.RPC_PROVIDER_URL_SEI;
       const account = await getAccount();
-      const request = await client.prepareTransactionRequest({
-        account,
-        to: to,
-        value: value,
-      });
-  console.log("request", request)
-      const serializedTransaction = await client.sendTransaction(request);
-      const hash = await client.sendRawTransaction({ serializedTransaction });
-  
+
+        const hash = await  client.sendTransaction({
+            account: account as `0x${string}`,
+     
+            to: to,
+            value: decimalToBigInt(String(value)),
+        });
+        console.log("hash", hash)
       return hash;
     } catch (error) {
       console.error("Transfer failed:", error);
       throw error;
     }
   };
+
+

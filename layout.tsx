@@ -37,18 +37,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                             return (
                               <button
                                 onClick={openConnectModal}
-                                className="group relative px-6 py-2 bg-[#9E1F19] rounded-lg overflow-hidden transition-all duration-300 ease-out hover:scale-105"
+                                className="group relative px-6 py-2  rounded-lg overflow-hidden transition-all duration-300 ease-out hover:scale-105"
                               >
                                 <span className="relative z-10 text-white font-medium">
                                   Connect Wallet
                                 </span>
-                                <div className="absolute inset-0 bg-gradient-to-r from-[#9E1F19] to-[#FF3B30] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                               </button>
                             );
                           }
                           return (
-                            <div className="relative bg-[#9E1F19] rounded-lg overflow-hidden group transition-all duration-300 ease-out hover:scale-105">
-                              <div className="absolute inset-0 bg-gradient-to-r from-[#9E1F19] to-[#FF3B30] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <div className="relative  rounded-lg overflow-hidden group transition-all duration-300 ease-out hover:scale-105">
+                              <div className="absolute inset-0  opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                               <div className="relative z-10 px-4 py-2">
                                 <ConnectButton
                                   accountStatus="avatar"

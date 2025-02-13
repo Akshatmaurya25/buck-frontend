@@ -11,12 +11,28 @@ import {
   Layers,
   X,
   Github,
+  MessageCircle,
+  Plus,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import logo from "../logo.png";
 import Image from "next/image";
 
+interface ChatHistory {
+  id: string;
+  timestamp: string;
+  preview: string;
+}
+
 export function Sidebar() {
   const [isHovering, setIsHovering] = React.useState(false);
+  const [chatHistory, setChatHistory] = React.useState<ChatHistory[]>([]);
+  const router = useRouter();
+
+  const handleNewChat = () => {
+    const newChatId = Date.now().toString();
+    router.push(`/chat/${newChatId}`);
+  };
 
   return (
     <div
@@ -64,6 +80,54 @@ export function Sidebar() {
       <div className="pt-[60px]"> {/* Adjust this value based on your logo section height */}
         <ScrollArea className="h-[calc(100vh-60px)]">
           <div className="space-y-4 p-4">
+            {/* New Chat Button */}
+            <Button
+              variant="default"
+              className={cn(
+                "w-full bg-[#3C2322] text-[#F1E9E9] hover:bg-[#2E2E2E] transition-all duration-300",
+                !isHovering ? "px-2" : "px-4"
+              )}
+              onClick={handleNewChat}
+            >
+              <Plus className="h-4 w-4" />
+              <span className={cn(
+                "ml-2 transition-opacity duration-500",
+                !isHovering ? "opacity-0 w-0" : "opacity-100 w-auto"
+              )}>
+                New Chat
+              </span>
+            </Button>
+
+            {/* Chat History */}
+            <div className="space-y-2">
+              <div className={cn(
+                "text-xs text-[#606060] transition-opacity duration-500 px-2",
+                !isHovering ? "opacity-0" : "opacity-100"
+              )}>
+                Recent Chats
+              </div>
+              {chatHistory.map((chat) => (
+                <Button
+                  key={chat.id}
+                  variant="ghost"
+                  className={cn(
+                    "w-full justify-start text-[#F1E9E9] hover:bg-[#3C2322] group",
+                    !isHovering && "justify-center px-2"
+                  )}
+                  onClick={() => router.push(`/chat/${chat.id}`)}
+                >
+                  <MessageCircle className="h-4 w-4 shrink-0" />
+                  <div className={cn(
+                    "ml-2 transition-all duration-500 overflow-hidden text-left",
+                    !isHovering ? "w-0" : "w-auto"
+                  )}>
+                    <div className="truncate text-sm">{chat.preview}</div>
+                    <div className="text-xs text-[#606060]">{chat.timestamp}</div>
+                  </div>
+                </Button>
+              ))}
+            </div>
+
             <nav className="space-y-2">
               <NavButton icon={<LayoutGrid className="h-4 w-4" />} label="Tasks" isHovering={isHovering} />
               <NavButton icon={<Functions className="h-4 w-4" />} label="Functions" isHovering={isHovering} />
