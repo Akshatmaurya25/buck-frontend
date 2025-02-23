@@ -20,7 +20,7 @@ import { Address, createWalletClient, custom } from "viem";
 const config = getDefaultConfig({
   appName: "My RainbowKit App",
   projectId: "cc7548b1e3c2739cec64c6295b58cd50",
-  chains: [mainnet, base, sei],
+  chains: [ sei, seiTestnet],
   ssr: true,
 });
 

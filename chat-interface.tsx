@@ -31,7 +31,7 @@ export default function ChatInterface() {
     {
       role: "agent",
       content:
-        "Hello, I am a Buck Terminal. Connect your wallet and let's get started",
+        "Hello, I am a Buck Terminal 🦆 \n \nI am still in BETA phase, please expect a slight delay in first few response",
       timestamp: "4:08:28 PM",
     },
   ]);
@@ -66,7 +66,17 @@ export default function ChatInterface() {
           address: account.address,
         },
       });
+      console.log("Buck response:", response.data);
       const res = JSON.parse(response.data.data);
+      if (
+        response.status === 501 ||
+        response.status === 502 ||
+        response.status === 503 ||
+        response.status === 504
+      ) {
+        sendMessage("🔴Internal server error. Try again!", "agent");
+        return;
+      }
       if (response.data.success) {
         if (res.execute) {
           sendMessage("Confirm transaction from your wallet", "agent");
@@ -101,45 +111,6 @@ export default function ChatInterface() {
     setLoading(true);
   };
   const account = useAccount();
-
-  // Template buttons component
-  const TemplateButtons = () => (
-    <div className="grid grid-cols-2 gap-4 w-full max-w-2xl">
-      {[
-        {
-          title: "Get your Wallet Balance",
-          desc: "Check your current wallet balance",
-          query: "Get wallet balance",
-        },
-        {
-          title: "Transfer your Tokens",
-          desc: "Send tokens securely",
-          query: "Transfer tokens",
-        },
-        {
-          title: "Get Tweets",
-          desc: "View latest crypto updates",
-          query: "Get tweets",
-        },
-        {
-          title: "Know About Crypto",
-          desc: "Learn blockchain basics",
-          query: "Tell me about cryptocurrency",
-        },
-      ].map((item, i) => (
-        <Button
-          key={i}
-          className="h-24 bg-[#3C2322] text-[#F1E9E9] hover:bg-[#3C2322]/90 flex flex-col items-center justify-center p-4 rounded-xl transition-all"
-          onClick={() => handleSend(item.query)}
-        >
-          <span className="text-sm font-medium text-center">{item.title}</span>
-          <span className="text-xs text-[#9E9E9E] mt-2 text-center">
-            {item.desc}
-          </span>
-        </Button>
-      ))}
-    </div>
-  );
 
   return (
     <div className="flex-1 flex flex-col bg-[#141414] overflow-auto text-[#F1E9E9]">
@@ -199,7 +170,10 @@ export default function ChatInterface() {
                         variant="ghost"
                         size="icon"
                         className="h-8 w-8 text-[#F1E9E9] hover:bg-[#2E2E2E]"
-                        onClick={() => copyToClipboard(message.content)}
+                        onClick={() =>
+                          typeof message.content === "string" &&
+                          copyToClipboard(message.content)
+                        }
                       >
                         <Copy className="h-4 w-4" />
                       </Button>
@@ -268,14 +242,15 @@ export default function ChatInterface() {
         </ScrollArea>
 
         {/* Input and template section */}
-        <div className="w-full space-y-3">
+        <div className="w-full space-y-3 mt-2 pb-4">
           {/* Input box */}
           <div className="flex gap-2 w-full">
-            <Textarea
+            <input
+              type="text"
               placeholder="Type a message..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="min-h-[52px] max-h-32 bg-[#2E2E2E] text-[#F1E9E9] border-[#3C2322] rounded-xl flex-1"
+              className="min-h-[42px] py-2 px-6 max-h-32 bg-[#2E2E2E] text-[#F1E9E9] border-[#3C2322] rounded-xl flex-1"
             />
             <Button
               className="px-6 bg-[#3C2322] text-[#F1E9E9] hover:bg-[#2E2E2E] rounded-xl"
@@ -291,30 +266,30 @@ export default function ChatInterface() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-3xl">
                 {[
                   {
-                    title: "Wallet Balance",
-                    desc: "Check balance",
-                    query: "Get wallet balance",
+                    title: "Get Wallet Balance",
+                    desc: "Check wallet balance",
+                    query: "Get my sei wallet balance",
                   },
                   {
-                    title: "Transfer Tokens",
-                    desc: "Send tokens",
-                    query: "Transfer tokens",
+                    title: "Transfer your Tokens",
+                    desc: "Send tokens securely",
+                    query: "Transfer <amount> SEI tokens to <address> ",
                   },
                   {
                     title: "Get Tweets",
-                    desc: "Crypto updates",
-                    query: "Get tweets",
+                    desc: "View latest crypto updates",
+                    query: "Can you search for <query> on twitter",
                   },
                   {
-                    title: "About Crypto",
-                    desc: "Learn basics",
-                    query: "Tell me about cryptocurrency",
+                    title: "Top twitter agents",
+                    desc: "Search top twitter accounts",
+                    query: "Tell me top twitter accounts with their mindshare",
                   },
                 ].map((item, i) => (
                   <Button
                     key={i}
                     className="h-16 bg-[#3C2322] text-[#F1E9E9] hover:bg-[#3C2322]/90 flex flex-col items-center justify-center p-2 rounded-xl transition-all"
-                    onClick={() => handleSend(item.query)}
+                    onClick={() => setInput(item.query)}
                   >
                     <span className="text-sm font-medium">{item.title}</span>
                     <span className="text-xs text-[#9E9E9E]">{item.desc}</span>

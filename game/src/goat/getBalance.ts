@@ -2,10 +2,11 @@ import { getOnChainTools } from "@goat-sdk/adapter-vercel-ai";
 import { viem,} from "@goat-sdk/wallet-viem";
 import { createWalletClient, http, formatEther } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { base } from "viem/chains";
+import { base, polygon } from "viem/chains";
 import dotenv from 'dotenv';
 import { walletAdapter, WalletAdapter } from "../adapters/WalletAdapter";
 import { bigIntToDecimal } from "../utils/BigIntDecimalConversions";
+import { addressState } from "..";
 
 
 dotenv.config();
@@ -29,7 +30,7 @@ const account = privateKeyToAccount(process.env.WALLET_PRIVATE_KEY as `0x${strin
 const client = createWalletClient({
   account,
   transport: http(process.env.RPC_PROVIDER_URL),
-  chain: base,
+  chain: base
 });
 export const walletFunctions = {
   name: "getWalletBalance",
@@ -38,7 +39,7 @@ export const walletFunctions = {
   
   async handler(): Promise<WalletResponse> {        
       try {
-          const walletData = await walletAdapter.getBalance();
+          const walletData = await walletAdapter.getBalance(addressState._address as `0x${string}`);
           console.log("Wallet data:", walletData);
 
           if (!walletData.balance) {

@@ -3,14 +3,14 @@
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { WagmiConfig } from "wagmi";
-import { base, seiTestnet, sei } from "wagmi/chains";
+import { base, seiTestnet, sei, polygon } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { Address, createWalletClient, custom } from "viem";
 
 const config = getDefaultConfig({
   appName: "My RainbowKit App",
   projectId: "cc7548b1e3c2739cec64c6295b58cd50",
-  chains: [sei, base, seiTestnet],
+  chains: [sei, base, seiTestnet, polygon],
   ssr: true, // If your dApp uses server side rendering (SSR)
 });
 

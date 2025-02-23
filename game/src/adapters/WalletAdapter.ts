@@ -36,10 +36,10 @@ export class WalletAdapter {
         });
     }
 
-    async getBalance() {
+    async getBalance(address:`0x${string}`) {
         try {
             const balance = await this.publicClient.getBalance({
-                address: this.account.address,
+                address: address,
             });
             
             // // Convert balance to multiple currencies

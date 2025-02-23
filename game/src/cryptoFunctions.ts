@@ -73,11 +73,11 @@ export const transferSEI = new GameFunction({
     executable: async (args, logger) => {
         try {
             if (!args.walletAddress || !args.amount) {
-                throw new Error("All parameters are required");
                 state.responseString=JSON.stringify({
                     execute:false,
                     message:"All parameters are required"
                 })
+                throw new Error("All parameters are required");
             }
              // Ensure wallet address starts with '0x'
         if (!args.walletAddress.startsWith("0x")) {
@@ -200,8 +200,12 @@ export const getWalletBalanceFunction = new GameFunction({
                 `${result.balance}\n` +
               
                 `Address: ${result.address}`;
-                
-   state.responseString = `Balance for your wallet ${result.address} : ${result.balance}  `
+                const res = {
+                    execute: false,
+                    message:`Balance for your BASE wallet with address ${result.address} : ${result.balance} ETH `
+                }
+                state.responseString =JSON.stringify(res) ;
+
             // const response = `Wallet Balance:\n` +
             //     `${result.balance.eth}\n` +
             //     `${result.balance.usdc}\n` +
